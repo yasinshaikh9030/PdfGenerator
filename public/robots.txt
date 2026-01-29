@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://quick-pdf-generator.vercel.app/sitemap.xml
