@@ -79,11 +79,13 @@ function PreviewPage() {
                 .slice(0, 10)}.pdf`;
 
             const pdfBlobUrl = URL.createObjectURL(pdfBlob);
+            const pdfSizeBytes = pdfBlob.size;
 
             navigate("/download", {
                 state: {
                     pdfBlobUrl,
                     suggestedName,
+                    pdfSizeBytes,
                 },
             });
         } catch (err) {
@@ -131,8 +133,8 @@ function PreviewPage() {
                     onClick={handleCreatePdf}
                     disabled={isBuilding || !items.length}
                     className={`w-full rounded-lg px-4 py-2 text-sm font-semibold sm:w-auto ${isBuilding
-                            ? "cursor-wait bg-primary-light text-white"
-                            : "bg-primary text-white hover:bg-primary-dark"
+                        ? "cursor-wait bg-primary-light text-white"
+                        : "bg-primary text-white hover:bg-primary-dark"
                         }`}
                 >
                     {isBuilding ? "Building PDF…" : "Create PDF"}

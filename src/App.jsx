@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, Link } from "react-router-dom";
 import HomePage from "./pages/HomePage.jsx";
 import PreviewPage from "./pages/PreviewPage.jsx";
 import DownloadPage from "./pages/DownloadPage.jsx";
@@ -8,9 +8,12 @@ function App() {
     <div className="app-shell flex min-h-screen flex-col bg-gradient-to-b from-red-50 via-white to-red-100">
       <header className="sticky top-0 z-20 border-b border-red-100 bg-white/80 backdrop-blur">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-          <span className="text-lg font-semibold tracking-tight text-primary">
+          <Link
+            to="/"
+            className="text-lg font-semibold tracking-tight text-primary hover:text-primary-dark"
+          >
             Image to PDF
-          </span>
+          </Link>
           <span className="hidden text-xs text-neutral-500 sm:inline">
             Create and share PDFs from your images in three simple steps.
           </span>

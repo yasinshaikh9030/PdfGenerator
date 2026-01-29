@@ -9,6 +9,7 @@ function DownloadPage() {
 
     const pdfBlobUrl = location.state?.pdfBlobUrl || "";
     const suggestedName = location.state?.suggestedName || "output.pdf";
+    const pdfSizeBytes = location.state?.pdfSizeBytes ?? null;
 
     const [fileName, setFileName] = useState(suggestedName);
     const [hasDownloaded, setHasDownloaded] = useState(false);
@@ -80,6 +81,11 @@ function DownloadPage() {
                         <p className="text-[11px] text-neutral-500">
                             Extension <span className="font-mono">.pdf</span> is included automatically.
                         </p>
+                        {pdfSizeBytes !== null && (
+                            <p className="text-[11px] text-neutral-500">
+                                Approx. size: {(pdfSizeBytes / (1024 * 1024)).toFixed(2)} MB
+                            </p>
+                        )}
                     </div>
 
                     <div className="space-y-2">
