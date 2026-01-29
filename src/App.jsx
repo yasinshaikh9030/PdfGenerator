@@ -29,7 +29,7 @@ function App() {
       </main>
 
       <footer className="py-4 text-center text-xs text-neutral-500">
-        Build for simple and fast use☠️!
+        for more information contact on yasinshaikh2186@gmail.com
       </footer>
     </div>
   );
