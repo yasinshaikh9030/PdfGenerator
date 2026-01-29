@@ -111,7 +111,7 @@ function DownloadPage() {
             {hasDownloaded && (
                 <div className="mt-4 rounded-xl border border-dashed border-red-200 bg-red-50/60 px-4 py-3 text-center text-sm text-neutral-700 sm:text-base">
                     <p className="font-semibold text-primary">
-                        Thanks for using the application
+                        Thanks 🩷 for using the application
                     </p>
                     <p className="mt-1 text-xs text-neutral-600 sm:text-sm">
                         Scroll down to start again with new images.
