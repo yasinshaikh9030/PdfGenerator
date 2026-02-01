@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import DragList from "../components/DragList.jsx";
 import { generatePDF } from "../utils/pdfGenerator.js";
 import { extractName } from "../utils/ocr.js";
+import { savePdf, toBase64 } from "../utils/storage.js";
 
 function PreviewPage() {
     const location = useLocation();
@@ -81,9 +82,22 @@ function PreviewPage() {
             const pdfBlobUrl = URL.createObjectURL(pdfBlob);
             const pdfSizeBytes = pdfBlob.size;
 
+            let dataUrl = "";
+            try {
+                dataUrl = await toBase64(pdfBlob);
+                savePdf({
+                    name: suggestedName,
+                    sizeBytes: pdfSizeBytes,
+                    dataUrl,
+                });
+            } catch (storageError) {
+                // Ignore storage errors (e.g., private mode, quota issues)
+            }
+
             navigate("/download", {
                 state: {
                     pdfBlobUrl,
+                    pdfDataUrl: dataUrl || "",
                     suggestedName,
                     pdfSizeBytes,
                 },

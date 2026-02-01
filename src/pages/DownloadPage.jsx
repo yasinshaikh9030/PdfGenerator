@@ -2,19 +2,44 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import PdfPreview from "../components/PdfPreview.jsx";
 import ShareButtons from "../components/ShareButtons.jsx";
+import { loadPdf } from "../utils/storage.js";
 
 function DownloadPage() {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const pdfBlobUrl = location.state?.pdfBlobUrl || "";
-    const suggestedName = location.state?.suggestedName || "output.pdf";
-    const pdfSizeBytes = location.state?.pdfSizeBytes ?? null;
+    const [{ pdfSrc, suggestedName, pdfSizeBytes }] = useState(() => {
+        const saved = loadPdf();
+        if (saved && saved.dataUrl) {
+            return {
+                pdfSrc: saved.dataUrl,
+                suggestedName: saved.name || "output.pdf",
+                pdfSizeBytes:
+                    typeof saved.sizeBytes === "number" ? saved.sizeBytes : null,
+            };
+        }
+
+        const stateDataUrl = location.state?.pdfDataUrl || "";
+        if (stateDataUrl) {
+            return {
+                pdfSrc: stateDataUrl,
+                suggestedName: location.state?.suggestedName || "output.pdf",
+                pdfSizeBytes: location.state?.pdfSizeBytes ?? null,
+            };
+        }
+
+        const stateBlobUrl = location.state?.pdfBlobUrl || "";
+        return {
+            pdfSrc: stateBlobUrl,
+            suggestedName: location.state?.suggestedName || "output.pdf",
+            pdfSizeBytes: location.state?.pdfSizeBytes ?? null,
+        };
+    });
 
     const [fileName, setFileName] = useState(suggestedName);
     const [hasDownloaded, setHasDownloaded] = useState(false);
 
-    if (!pdfBlobUrl) {
+    if (!pdfSrc) {
         return (
             <div className="space-y-4 text-center">
                 <h1 className="text-xl font-semibold text-neutral-900 sm:text-2xl">
@@ -37,10 +62,10 @@ function DownloadPage() {
     }
 
     const handleDownload = () => {
-        if (!pdfBlobUrl) return;
+        if (!pdfSrc) return;
 
         const link = document.createElement("a");
-        link.href = pdfBlobUrl;
+        link.href = pdfSrc;
         link.download = (fileName || "output.pdf").trim();
         document.body.appendChild(link);
         link.click();
@@ -61,7 +86,7 @@ function DownloadPage() {
 
             <div className="grid gap-6 md:grid-cols-5">
                 <div className="md:col-span-3">
-                    <PdfPreview src={pdfBlobUrl} />
+                    <PdfPreview src={pdfSrc} />
                 </div>
                 <div className="space-y-4 md:col-span-2">
                     <div className="space-y-2">

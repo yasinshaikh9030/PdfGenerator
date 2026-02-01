@@ -1,10 +1,76 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ImageUploader from "../components/ImageUploader.jsx";
+import { loadImages, saveImages, clearImages, toBase64 } from "../utils/storage.js";
+
+const dataUrlToFile = (dataUrl, fileName) => {
+    const parts = dataUrl.split(",");
+    if (parts.length < 2) return null;
+    const mimeMatch = parts[0].match(/:(.*?);/);
+    const mime = mimeMatch ? mimeMatch[1] : "image/jpeg";
+    const binaryStr = atob(parts[1]);
+    const len = binaryStr.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i += 1) {
+        bytes[i] = binaryStr.charCodeAt(i);
+    }
+    try {
+        return new File([bytes], fileName, { type: mime });
+    } catch (error) {
+        return new Blob([bytes], { type: mime });
+    }
+};
 
 function HomePage() {
     const [images, setImages] = useState([]);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const saved = loadImages();
+        if (!saved || !saved.length) return;
+
+        const restored = saved
+            .map((item) => {
+                if (!item || !item.dataUrl) {
+                    return null;
+                }
+                const name = item.name || "image.jpg";
+                return dataUrlToFile(item.dataUrl, name);
+            })
+            .filter(Boolean);
+
+        if (restored.length) {
+            setImages(restored);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!images.length) {
+            clearImages();
+            return;
+        }
+
+        let isCancelled = false;
+
+        const persist = async () => {
+            const serialized = await Promise.all(
+                images.map(async (file) => ({
+                    name: file.name,
+                    dataUrl: await toBase64(file),
+                }))
+            );
+
+            if (!isCancelled) {
+                saveImages(serialized);
+            }
+        };
+
+        persist();
+
+        return () => {
+            isCancelled = true;
+        };
+    }, [images]);
 
     const handleNext = () => {
         if (!images.length) return;
