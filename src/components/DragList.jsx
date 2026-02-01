@@ -27,12 +27,12 @@ function DragList({ items, onReorder }) {
     const sensors = useSensors(
         useSensor(MouseSensor, {
             activationConstraint: {
-                distance: 5,
+                distance: 1,
             },
         }),
         useSensor(TouchSensor, {
             activationConstraint: {
-                delay: 150,
+                delay: 0,
                 tolerance: 5,
             },
         })
