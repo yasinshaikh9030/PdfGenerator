@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { DndContext, closestCenter } from "@dnd-kit/core";
+import {
+    DndContext,
+    closestCenter,
+    useSensor,
+    useSensors,
+    MouseSensor,
+    TouchSensor,
+} from "@dnd-kit/core";
 import {
     SortableContext,
     verticalListSortingStrategy,
@@ -17,6 +24,20 @@ function DragList({ items, onReorder }) {
         );
     }
 
+    const sensors = useSensors(
+        useSensor(MouseSensor, {
+            activationConstraint: {
+                distance: 5,
+            },
+        }),
+        useSensor(TouchSensor, {
+            activationConstraint: {
+                delay: 150,
+                tolerance: 5,
+            },
+        })
+    );
+
     const handleDragEnd = (event) => {
         const { active, over } = event;
         if (!over || active.id === over.id) return;
@@ -30,7 +51,11 @@ function DragList({ items, onReorder }) {
     };
 
     return (
-        <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+        <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+        >
             <SortableContext
                 items={items.map((item) => item.id)}
                 strategy={verticalListSortingStrategy}
@@ -65,6 +90,7 @@ function SortableRow({ id, index, file }) {
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,
+        touchAction: "none",
     };
 
     return (
