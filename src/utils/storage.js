@@ -3,7 +3,7 @@ const PDF_STORAGE_KEY = "savedPdf";
 
 export const saveImages = (images) => {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(images));
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(images));
   } catch (error) {
     // Ignore write errors (e.g., private mode, quota exceeded)
   }
@@ -11,7 +11,7 @@ export const saveImages = (images) => {
 
 export const loadImages = () => {
   try {
-    const data = localStorage.getItem(STORAGE_KEY);
+    const data = sessionStorage.getItem(STORAGE_KEY);
     return data ? JSON.parse(data) : [];
   } catch (error) {
     return [];
@@ -20,7 +20,7 @@ export const loadImages = () => {
 
 export const clearImages = () => {
   try {
-    localStorage.removeItem(STORAGE_KEY);
+    sessionStorage.removeItem(STORAGE_KEY);
   } catch (error) {
     // Ignore removal errors
   }
@@ -28,7 +28,7 @@ export const clearImages = () => {
 
 export const savePdf = (payload) => {
   try {
-    localStorage.setItem(PDF_STORAGE_KEY, JSON.stringify(payload));
+    sessionStorage.setItem(PDF_STORAGE_KEY, JSON.stringify(payload));
   } catch (error) {
     // Ignore write errors
   }
@@ -36,7 +36,7 @@ export const savePdf = (payload) => {
 
 export const loadPdf = () => {
   try {
-    const data = localStorage.getItem(PDF_STORAGE_KEY);
+    const data = sessionStorage.getItem(PDF_STORAGE_KEY);
     return data ? JSON.parse(data) : null;
   } catch (error) {
     return null;
@@ -45,7 +45,7 @@ export const loadPdf = () => {
 
 export const clearPdf = () => {
   try {
-    localStorage.removeItem(PDF_STORAGE_KEY);
+    sessionStorage.removeItem(PDF_STORAGE_KEY);
   } catch (error) {
     // Ignore removal errors
   }
